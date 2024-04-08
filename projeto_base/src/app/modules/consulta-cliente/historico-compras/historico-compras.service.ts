@@ -1,0 +1,311 @@
+import { Injectable } from "@angular/core";
+
+@Injectable()
+export class HistoricoComprasService {
+    
+    getItems() {
+
+        return [
+          {
+            numero: 'EP8112',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'produzindo',
+            notaFiscal: '',
+            serie: '',
+            itens: [
+              {
+                numero: 'EP8112',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8112',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8113',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'finalizado',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8113',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8113',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8114',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'enviando',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8114',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8114',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8115',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'entregue',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8115',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8115',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8116',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'cancelado',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8116',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8116',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8117',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'entregue',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8117',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8117',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8118',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'entregue',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8118',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8118',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8119',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'entregue',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8119',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8119',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8120',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'entregue',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8120',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8120',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+          {
+            numero: 'EP8121',
+            dataEmissao: '11-11-2022',
+            codCampanha: '000001',
+            codCondPagto: '001',
+            descCondPagto: 'A VISTA CARTEIRA',
+            status: 'entregue',
+            notaFiscal: '123456',
+            serie: '01',
+            itens: [
+              {
+                numero: 'EP8121',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+              {
+                numero: 'EP8121',
+                item: '001',
+                lado: 'D',
+                produto: '0341',
+                descricao: 'PB UV',
+                quantidade: 2,
+                preco: 1000.50,
+              },
+            ]
+          },
+        ];
+    }
+}

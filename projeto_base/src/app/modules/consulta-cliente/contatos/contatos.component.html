@@ -1,0 +1,18 @@
+<div class="po-row po-mt-2">
+    <po-button
+      class="po-sm-12 po-md-6 po-btn-incluir"
+      p-label="Incluir Contato"
+      p-kind="primary">
+    </po-button>
+</div>
+
+<div class="po-row po-mt-2">
+    <po-table class="po-sm-12"
+      [p-actions]="actions"
+      [p-columns]="columnsContatos"
+      [p-items]="listContatos"
+      [p-literals]="literalsContato"
+      [p-striped]="true"
+      [p-actions-right]="true">
+    </po-table>
+</div>

@@ -1,0 +1,91 @@
+<po-page-default class="animate-fade-in">
+
+    <div *ngIf="!existeSolicitacao">
+        <div class="po-text-center po-mt-5">
+            <font class="po-font-title">Não existe nenhuma solicitação de venda para você.</font>
+            <div class="po-text-center">
+                <font class="po-font-subtitle">Mas fique tranquilo, avisaremos assim que tiver.</font>
+            </div>
+        </div>
+        <img class="custom-image animate-fade-in" src="/assets/images/logistics-animate.svg" alt="login">
+    </div>
+
+
+    <div *ngIf="existeSolicitacao">
+        <po-container class="po-text-center po-ml-5" [p-no-border]="true">
+            <font class="po-font-display po-mb-5">{{ messageSolicitacao }}</font>
+        </po-container>
+
+        <po-container [p-no-border]="true">
+            
+            <po-table class="po-sm-12 " [p-actions]="actions" [p-columns]="columnsContatos" [p-items]="produtosOrcamento"
+                [p-literals]="literalsContato" [p-striped]="true" [p-actions-right]="true" p-container="true"
+                [p-sort]="true" [p-striped]="true" [p-loading-show-more]="true" [p-loading]="loadTable">
+            </po-table>
+
+        </po-container>
+    </div>
+
+    <div class="animate-fade-in">
+        
+        <!-- modal para orçamento -->
+        <po-modal class="animate-fade-in" #modalOrcamento p-icon="po-icon po-icon-clipboard"
+            (p-close)="closeModalOrcamento($event)" [p-title]="titleModalOrcamento">
+
+            <po-input class="po-md-6" p-icon="po-icon po-icon-bar-code" name="produtoOrcamento" p-label="Produto"
+                p-readonly="true" [ngModel]="produtoOrcamento">
+            </po-input>
+
+            <po-input class="po-md-6" name="quantidadeOrcamento" p-label="Quantidade solicitada" p-readonly="true"
+                [ngModel]="quantidadeOrcamento">
+            </po-input>
+
+            <po-input class="po-md-6" name="vencimentoOrcamento" p-label="Você poderá enviar o orçamento até"
+                p-readonly="true" [ngModel]="vencimentoOrcamento">
+            </po-input>
+
+            <po-input class="po-md-6" name="unidadeMedidaOrcamento" p-label="Unidade de medida" p-readonly="true"
+                [ngModel]="unidadeMedidaOrcamento">
+            </po-input>
+
+            <!-- <div class="po-text-center po-mt-3">
+                <font class="po-font-subtitle">Insira o orçamento abaixo</font>
+            </div> -->
+
+            <!-- Orçameto -->
+            <po-input class="po-md-6" p-mask="" p-icon="po-icon po-icon-finance" name="valorProposto"
+                p-label="Valor proposto" p-readonly="false" [(ngModel)]="valorProposto">
+            </po-input>
+
+            <po-input class="po-md-6" p-mask="999" name="prazoEntrega"
+                p-label="Prazo para entrega em dias" p-placeholder="Digite a quantide de dias para entrega" p-readonly="false"
+                [(ngModel)]="prazoEntrega">
+            </po-input>
+
+
+            <po-modal-footer [p-disabled-align]="false">
+                <po-button p-danger="true" p-label="Fechar" [p-disabled]="disabledButtonFecharOrcamento" (p-click)="closeModal()"> </po-button>
+                <po-button p-kind="primary" [p-loading]="loadingButtonOrcamento" p-label="Enviar orçamento"
+                    (p-click)="enviarOrcamento()"> </po-button>
+            </po-modal-footer>
+
+        </po-modal>
+
+        <!-- modal para falta de estoque -->
+        <po-modal class="animate-fade-in" #modalSemEstoque p-icon="po-icon po-icon-pushcart"
+            (p-close)="closeModalSemEstoque($event)" [p-title]="titleModalOffEstoque">
+
+            <po-input class="po-md-12" p-icon="po-icon po-icon-bar-code" name="produtoOrcamento" p-label="Produto"
+                p-readonly="true" [ngModel]="produtoOrcamento">
+            </po-input>
+
+            <po-modal-footer [p-disabled-align]="false">
+                <po-button p-label="Voltar" [p-disabled]="disabledButtonVoltarSemEstoque" (p-click)="closeModalOffEstoque()"> </po-button>
+                <po-button p-kind="primary" p-danger="true" [p-loading]="loadingButtonSemEstoque" p-label="Confirmar falta de estoque"
+                    (p-click)="confirmarFaltaEstoque()"> </po-button>
+            </po-modal-footer>
+
+        </po-modal>
+    </div>
+
+</po-page-default>

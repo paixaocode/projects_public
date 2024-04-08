@@ -1,0 +1,150 @@
+<div class="move-content">
+  <div class="po-font-display po-md-12 po-text-center animate-fade-in po-mt-4">
+    <span id="typedText1"></span>
+  </div>
+
+  <div class="po-font-subtitle po-md-12 po-text-center animate-fade-in po-mt-2">
+    <span id="typedText2"></span>
+  </div>
+
+  <div class="po-md-12 po-text-center po-mt-4" *ngIf="showSubmitButton">
+    <po-button class="animate-buttonStageReady" [p-disabled]="false" p-icon="" p-label="Estou pronto!"
+      [p-loading]="false" [p-small]="false" p-type="default" (p-click)="buttonStageReady()">
+    </po-button>
+  </div>
+</div>
+
+<form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+  <div class="animate-fade-in po-text-center po-md-6 po-ml-3 po-mt-7" *ngIf="onDestroy()">
+    <font class="po-font-subtitle animate-fade-in">{{ messageMain }}</font>
+  </div>
+  
+  <div *ngIf="onDestroy() && !stepStageTwo">
+
+    <po-input *ngIf="!tokenValidado" name="token" [(ngModel)]="token" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-text-center "
+      p-label="Token ID" [p-optional]="true" p-mask=""
+      p-placeholder="Digite o token de cadastro, disponibilizado pela empresa!" p-icon="po-icon po-icon-lock"
+      p-minlenght="32" [p-maxlength]="32" (p-change)="onChange('token', $event)" [p-show-required]="true"
+      p-required="true" p-readonly="tokenValidado" [p-upper-case]="true">
+    </po-input>
+
+    <po-input name="razaoSocial" [(ngModel)]="razaoSocial"
+      class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-mt-3 po-text-center" p-label="Razão social"
+      [p-show-required]="true" p-required="true" [p-maxlength]="40" [p-upper-case]="true"
+      (p-change)="onChange('razaoSocial', $event)">
+    </po-input>
+
+    <po-input name="nomeFantasia" [(ngModel)]="nomeFantasia"
+      class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po po-text-center " p-label="Nome fantasia"
+      [p-show-required]="true" p-required="true" [p-maxlength]="20" [p-upper-case]="true"
+      (p-change)="onChange('nomeFantasia', $event)">
+    </po-input>
+
+    <po-input name="cnpj" [(ngModel)]="cnpj" class="animate-fade-in po-md-6 po-ml-3 po-mb-1 po-text-center "
+      p-label="CNPJ" p-placeholder="12.345.678/0001-00" [p-show-required]="true" p-required="true"
+      p-mask="99.999.999/9999-99" (p-change)="onChange('cnpj', $event)">
+    </po-input>
+
+    <po-input name="inscricaoEstadual" [(ngModel)]="inscricaoEstadual"
+      class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-text-center " p-label="Inscrição estadual (IE)"
+      [p-optional]="true" [p-maxlength]="18" (p-change)="onChange('inscricaoEstadual', $event)">
+    </po-input>
+
+    <img class="custom-image animate-fade-in" src="/assets/images/report-bro.svg" alt="report">
+
+    <po-button class="po-row po-ml-4 animate-fade-in" [p-disabled]="!myForm.valid" p-icon="" p-kind="primary"
+      p-label="Avançar" [p-disabled]="!tokenValidado" [p-loading]="false" [p-small]="false" p-type="default" (p-click)="onSubmit(myForm)">
+    </po-button>
+  </div>
+
+  <!-- step 2 -->
+  <div *ngIf="onDestroy() && stepStageTwo">
+    <po-input name="pais" [(ngModel)]="pais" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-mt-3 po-text-center"
+      p-label="Pais" [p-show-required]="true" p-required="false" [p-maxlength]="40" p-readonly="true"
+      p-placeholder="BRA" [p-upper-case]="true" (p-change)="onChange('pais', $event)">
+    </po-input>
+
+    <po-email name="email" [(ngModel)]="email" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po po-text-center "
+      p-label="E-mail" p-placeholder="totvs@totvs.com" p-icon="po-icon po-icon-mail" [p-show-required]="true"
+      p-required="true" [p-maxlength]="60" [p-upper-case]="true" (p-change)="onChange('email', $event)">
+    </po-email>
+
+    <po-input name="telefone" [(ngModel)]="telefone" class="animate-fade-in po-md-6 po-ml-3 po-mb-1 po-text-center "
+      p-label="Telefone" p-placeholder="1020-3040" [p-show-required]="true" p-mask="9999-9999"
+      p-icon="po-icon po-icon-telephone" (p-change)="onChange('telefone', $event)">
+    </po-input>
+
+    <po-input name="celular" [(ngModel)]="celular" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-text-center "
+      p-label="Celular" p-placeholder="(+55) (11) 91020-3040" p-icon="po-icon po-icon-device-smartphone"
+      [p-optional]="true" p-mask="(+99) (99) 99999?-9999" [p-show-required]="true" p-required="true" [p-maxlength]="21"
+      [p-show-required]="true" (p-change)="onChange('celular', $event)">
+    </po-input>
+
+    <po-input name="redesocial" [(ngModel)]="redesocial" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-text-center "
+      p-label="Instagram" p-placeholder="@totvs" [p-optional]="true" p-mask="" p-icon="po-icon po-icon-social-instagram"
+      [p-maxlength]="35" (p-change)="onChange('redesocial', $event)">
+    </po-input>
+
+    <img class="custom-image animate-fade-in" src="/assets/images/contacts.svg" alt="contacts">
+
+    <div class="po-row po-ml-4 animate-fade-in">
+      <po-button class="po-mr-3" [p-disabled]="disableButtonReturnStepOne" p-icon="" p-label="Voltar"
+        [p-loading]="false" [p-small]="false" p-type="default" (p-click)="returnFormStepOne()">
+      </po-button>
+      <po-button [p-disabled]="!myForm.valid" p-icon="" p-kind="primary" p-label="Avançar" [p-loading]="false"
+        [p-small]="false" p-type="default" (p-click)="onSubmitEnd(myForm)">
+      </po-button>
+    </div>
+
+  </div>
+  <!-- step 3 -->
+  <div *ngIf="!onDestroy() && !stepStageTwo && stepStageTree">
+
+    <div class="animate-fade-in po-tex-center po-md-6 po-ml-3 po-mt-7"
+      *ngIf="!onDestroy() && !stepStageTwo && stepStageTree">
+      <font class="po-font-subtitle animate-fade-in">{{ messageTextEnd }}</font>
+    </div>
+    <po-input name="cep" [(ngModel)]="cep" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-mt-3 po-text-center"
+      p-label="CEP" [p-show-required]="true" p-icon="po-icon po-icon-pin" p-mask="99999-999" p-required="true"
+      [p-show-required]="true" p-readonly="false" p-placeholder="01020-030" [p-upper-case]="true"
+      (p-change)="onChange('cep', $event)">
+    </po-input>
+
+    <po-input name="logradouro" [(ngModel)]="logradouro"
+      class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po po-text-center " p-label="Logradouro" p-readonly="true"
+      [p-upper-case]="true" (p-change)="onChange('logradouro', $event)">
+    </po-input>
+
+    <po-input name="complemento" [(ngModel)]="complemento"
+      class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po po-text-center " p-label="Complemento" p-readonly="false"
+      [p-upper-case]="true" (p-change)="onChange('complemento', $event)">
+    </po-input>
+
+    <po-input name="estado" [(ngModel)]="estado" class="animate-fade-in po-md-6 po-ml-3 po-mb-1 po-text-center "
+      p-label="Estado" p-readonly="true" [p-upper-case]="true" (p-change)="onChange('estado', $event)">
+    </po-input>
+
+    <po-input name="municipio" [(ngModel)]="municipio" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-text-center "
+      p-label="Municipio" p-readonly="true" [p-upper-case]="true" (p-change)="onChange('celular', $event)">
+    </po-input>
+
+    <po-password name="password" [(ngModel)]="password" class="animate-fade-in po-md-6 po-ml-3 po-mb-0 po-text-center "
+      p-label="Crie uma senha!" p-placeholder="Digite a senha que será usada para acessar o portal!" p-mask="999999"
+      p-icon="po-icon po-icon-lock" [p-maxlength]="6" [p-minlength]="6" p-required="true" [p-show-required]="true"
+      p-help="A senha conter 6 digitos númericos!" (p-change)="onChange('password', $event)">
+    </po-password>
+
+    <img class="custom-image animate-fade-in" src="/assets/images/address.svg" alt="address">
+
+    <div class="po-row po-ml-4 animate-fade-in">
+      <po-button class="po-mr-3" [p-disabled]="disableButtonReturnStepOne" p-icon="" p-label="Voltar"
+        [p-loading]="false" [p-small]="false" p-type="default" (p-click)="returnFormStepTwo()">
+      </po-button>
+      <po-button [p-disabled]="!myForm.valid" p-icon="" p-kind="primary" [p-loading]="loadingButtonFinalizar"
+        p-label="Finalizar" (p-click)="onFinish(myForm)">
+      </po-button>
+    </div>
+    <div class="progress-bar">
+    </div>
+  </div>
+</form>

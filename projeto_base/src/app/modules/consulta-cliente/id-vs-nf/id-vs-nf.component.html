@@ -1,0 +1,61 @@
+<div class="po-row">
+    <po-divider class="po-sm-12 po-mt-3" p-label="NFs"></po-divider>
+</div>
+
+<div class="po-row">
+                
+    <po-button 
+        class="po-sm-6 po-mt-1"
+        p-icon="fa fa-sticky-note-o" 
+        p-label="ID x NF"
+        p-type="primary">
+    </po-button>
+
+    <po-button 
+        class="po-sm-6 po-mt-1" 
+        p-icon="fa fa-sticky-note" 
+        p-label="Última NF"
+        p-type="secondary">
+    </po-button>
+
+</div>
+
+<div class="po-row">
+    <po-divider class="po-sm-12 po-mt-3" p-label="Emails"></po-divider>
+</div>
+
+<div class="po-row">
+
+    <span class="po-sm-12">
+        <span class="po-font-text-large-bold">E-Mail (NFe)</span>
+        <po-input [(ngModel)]="emailNfe" name="emailNfe" p-readonly></po-input>
+    </span>
+
+    <span class="po-sm-10">
+        <span class="po-font-text-large-bold">E-Mail Pedido</span>
+        <po-input [(ngModel)]="emailPedido" name="emailPedido"></po-input>
+    </span>
+
+    <po-button 
+        class="po-sm-2 po-mt-4" 
+        p-icon="fa fa-refresh" 
+        p-label="Atualizar"
+        p-type="primary">
+    </po-button>
+
+</div>
+
+<div class="po-row po-mt-2">
+
+    <po-table class="po-sm-12"
+      [p-actions]="actions"
+      p-container="shadow"
+      [p-height]="400"
+      [p-columns]="columnsCampanha"
+      [p-items]="listCampanhas"
+      [p-literals]="literalsCampanha"
+      [p-striped]="true"
+      [p-actions-right]="true">
+    </po-table>
+
+</div>
