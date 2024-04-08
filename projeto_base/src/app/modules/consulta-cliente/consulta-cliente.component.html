@@ -1,0 +1,139 @@
+<div class="po-row">
+    
+    <po-combo
+        class="po-offset-sm-3 po-offset-md-3 po-offset-lg-3 po-offset-xl-3 po-sm-6 po-md-6 po-lg-6 po-xl-6"
+        name="buscaCliente"
+        p-field-value="codigo"
+        p-field-label="nome"
+        [p-filter-service]="pesquisaCliente()"
+        [p-change-on-enter]="true"
+        p-icon="fa fa-search"
+        p-label="Pesquisa cliente"
+        p-placeholder="Informe algum dado do cliente para iniciar busca"
+        [p-filter-minlength]="5"
+        [p-disabled-init-filter]="true"
+        [p-clean]="true"
+        [p-debounce-time]="1000"
+        [p-required]="true"
+        (p-change)="valueChange($event)">
+
+            <ng-template p-combo-option-template let-option>
+                <div class="po-row">
+                    <po-avatar class="po-sm-2 po-md-3 po-lg-1" p-size="xs"></po-avatar>
+            
+                    <div class="po-sm-10 po-md-9 po-lg-11">
+                        <div class="po-font-text-large-bold">{{ option.label }}</div>
+                        <div class="po-font-text-smaller">Código: {{ option.value }}</div>
+                    </div>
+                </div>
+            </ng-template>                
+        
+    </po-combo>
+
+</div>
+
+<!--*ngIf="clienteSelecionado"-->
+<po-container 
+    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-mt-2"
+    [p-no-border]="false"
+    [p-no-shadow]="false">
+
+    <po-tabs [p-small]="true">
+        
+        <po-tab [p-active]="true" p-label="Dados Principais">
+
+            <app-dados-principais></app-dados-principais>
+
+        </po-tab>
+
+        <po-tab p-label="+ Dados">
+
+            <div class="po-row po-mt-2">
+
+                <po-tabs appTabsBackgroundCustom [p-small]="true">
+    
+                    <po-tab [p-active]="true" p-label="Hist. Compras">
+
+                        <app-historico-compras></app-historico-compras>
+    
+                    </po-tab>
+    
+                    <po-tab p-label="Trocas">
+    
+                        <app-creditos-trocas></app-creditos-trocas>
+    
+                    </po-tab>
+    
+                    <po-tab p-label="Registro">
+    
+                        <app-registro-recepcao></app-registro-recepcao>
+    
+                    </po-tab>
+    
+                    <po-tab p-label="SAC">
+    
+                        <app-sac></app-sac>
+    
+                    </po-tab>
+    
+                    <po-tab p-label="NF">
+    
+                        <app-id-vs-nf></app-id-vs-nf>
+    
+                    </po-tab>
+
+                    <po-tab p-label="Contatos">
+        
+                        <app-contatos></app-contatos>
+    
+                    </po-tab>
+    
+                </po-tabs>
+
+            </div>
+
+            
+        </po-tab>
+    
+        <po-tab p-label="Financeiro">
+            
+        </po-tab>
+    
+        <po-tab p-label="Saldos">
+
+            <app-saldos></app-saldos>
+            
+        </po-tab>
+
+    </po-tabs>
+
+    
+</po-container>
+
+<!--*ngIf="clienteSelecionado"-->
+<po-container 
+    class="po-sm-12 po-md-12 po-lg-12 po-xl-12 po-mt-2"
+    [p-no-border]="false"
+    [p-no-shadow]="false">
+
+    <po-divider p-label="Informações Gerais"></po-divider>
+
+    <div class="informacoes-gerais" style="width: 100%; padding: 16px;">
+
+        <div class="po-row">
+            <span class="po-font-text-large-bold u-primary">Cond. Especiais:</span>
+            <span class="po-font-text-large u-primary">&nbsp;TESTE</span>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <span class="po-font-text-large-bold u-primary">OBS. Mkt:</span>
+            <span class="po-font-text-large u-primary">&nbsp;POLITICA DE PRIVACIDADE</span>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <span class="po-font-text-large-bold u-primary">Mot. Risco:</span>
+            <span class="po-font-text-large u-primary">&nbsp;VENDEDOR RETIRA OS PARAFUSOS</span>
+        </div>
+
+    </div>
+</po-container>

@@ -1,0 +1,30 @@
+<po-page-default class="animate-fade-in">
+
+    <div *ngIf="!clickEntry" class="po-md-6 po-text-center po-mt-4 animate-fade-in">
+        <font class="po-font-title po-mb-5">Preencha as informações abaixo</font>
+
+        <img class="custom-image animate-fade-in" src="/assets/images/login-mobile.svg" alt="login">
+
+        <po-input class="" name="cnpj" p-label="Digite o seu CNPJ" p-placeholder="Digite o seu CNPJ"
+            p-mask="99.999.999/9999-99" p-required="true" [p-show-required]="true"
+             (p-change-model)="onCNPJChangeModel($event)"> </po-input>
+
+        <po-password name="password" [(ngModel)]="password" class="" p-label="Digite sua senha!"
+            p-placeholder="Digite a senha que você cadastrou!" p-mask="999999"
+            p-icon="po-icon po-icon-lock" [p-maxlength]="6" [p-minlength]="6" p-required="true" [p-show-required]="true"
+            p-help="A senha conter 6 digitos númericos!"
+            (p-change-model)="onPasswordChangeModel($event)">
+        </po-password>
+
+        <po-button class="po-mr-1" [p-disabled]="disabledButtonLogin" p-icon="po-icon po-icon-user" p-label="Entrar"
+            [p-loading]="loadingButtonLogin" [p-small]="false" p-kind="primary" (p-click)="loginButton()">
+        </po-button>
+        <po-button class="po-mr-1" [p-disabled]="false" p-icon="po-icon po-icon-info" p-label="Esqueci a senha"
+            [p-loading]="false" [p-small]="false" p-kind="" (p-click)="forgotPassword()">
+        </po-button>
+        
+        <po-button class="po-ml-5 po-mb-4 po-mt-2 po-mr-1" p-icon="po-icon po-icon-users" p-label="Cadastra-se"
+            [p-loading]="false" [p-small]="false" p-kind="" (p-click)="registerButton()">
+        </po-button>
+    </div>
+</po-page-default>
