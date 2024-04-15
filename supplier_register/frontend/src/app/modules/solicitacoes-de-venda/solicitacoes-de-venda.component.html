@@ -19,8 +19,9 @@
         <po-container [p-no-border]="true">
             
             <po-table class="po-sm-12 " [p-actions]="actions" [p-columns]="columnsContatos" [p-items]="produtosOrcamento"
-                [p-literals]="literalsContato" [p-striped]="true" [p-actions-right]="true" p-container="true"
-                [p-sort]="true" [p-striped]="true" [p-loading-show-more]="true" [p-loading]="loadTable">
+                [p-literals]="noExistSolicitacao" [p-striped]="true" [p-actions-right]="true" p-container="true"
+                [p-sort]="true" [p-striped]="true" [p-loading-show-more]="true" [p-loading]="loadTable" [p-selectable]="true" [p-single-select]="true" 
+                (p-selected)="selecionarItem($event)">
             </po-table>
 
         </po-container>
@@ -53,9 +54,9 @@
             </div> -->
 
             <!-- Orçameto -->
-            <po-input class="po-md-6" p-mask="" p-icon="po-icon po-icon-finance" name="valorProposto"
+            <po-decimal class="po-md-6" p-mask="" p-icon="po-icon po-icon-finance" name="valorProposto"
                 p-label="Valor proposto" p-readonly="false" [(ngModel)]="valorProposto">
-            </po-input>
+            </po-decimal>
 
             <po-input class="po-md-6" p-mask="999" name="prazoEntrega"
                 p-label="Prazo para entrega em dias" p-placeholder="Digite a quantide de dias para entrega" p-readonly="false"

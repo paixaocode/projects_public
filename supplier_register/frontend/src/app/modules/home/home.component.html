@@ -1,23 +1,32 @@
 <po-page-default class="animate-fade-in">
+
     <po-container class="po-text-center po-ml-5" [p-no-border]="true">
-        <font class="po-font-display">Suas informações em um só lugar</font>
+        <font class="po-font-display">{{messageMain}}</font>
     </po-container>
 
-    <po-container [p-no-border]="true">
+    <po-container *ngIf="!clickedProductWinner" [p-no-border]="true" class="animate-fade-in">
 
-        <po-widget class="po-md-6">
+        <po-widget class="po-md-6" (p-click)="clickWidgetProductWinner($event)">
 
             <div class="po-text-center">
                 <font class="po-font-subtitle">Produto mais vendido</font>
             </div>
+
 
             <div class="img-container">
                 <img class="img-vencedor" src="/assets/images/produto_vencedor.svg" alt="Produto mais vendido">
             </div>
 
             <div class="po-text-center">
-                <font class="po-font-subtitle custom-text-produto-mais-vendido">CANETA AZUL</font>
+                <font class="po-font-subtitle custom-text-produto-mais-vendido" id="produtoMaisVendido">
+                    {{produtoMaisVendido}}</font>
             </div>
+
+            <div class="po-text-center">
+                <font class="po-font-subtitle custom-text-produto-mais-vendido" id="produtoMaisVendido">
+                    {{quantidadeMaisVendido}}</font>
+            </div>
+
 
         </po-widget>
 
@@ -32,14 +41,19 @@
             </div>
 
             <div class="po-text-center">
-                <font class="po-font-subtitle custom-text-produto-menos-vendido">BORRACHA ESCOLAR FABER CASTEL</font>
+                <font class="po-font-subtitle custom-text-produto-menos-vendido">{{produtoMenosVendido}}</font>
+            </div>
+
+            <div class="po-text-center">
+                <font class="po-font-subtitle custom-text-produto-menos-vendido" id="produtoMaisVendido">
+                    {{quantidadeMenosVendido}}</font>
             </div>
 
         </po-widget>
 
     </po-container>
 
-    <po-container [p-no-border]="true">
+    <po-container *ngIf="!clickedProductWinner" [p-no-border]="true" class="animate-fade-in">
 
         <po-widget class="po-md-6 prodvencedor ">
 
@@ -74,5 +88,28 @@
         </po-widget>
 
     </po-container>
+
+    <div *ngIf="clickedProductWinner">
+        <po-container [p-no-border]="true" class="animate-fade-in">
+            <po-button class="po-md-2" p-icon="" p-label="Voltar" p-kind="primary" p-type="default"
+                (p-click)="onClickButtonVoltar()">
+            </po-button>
+
+        </po-container>
+
+        <po-container [p-no-border]="true">
+            <po-table class="po-md-6" [p-columns]="columnsProdutosMaisVendidos" [p-literals]="noExistData"
+                [p-items]="produtosMaisVendidos" [p-show-more-disabled]="true" (p-show-more)="loadMoreData($event)" [p-infinite-scroll-distance]="10">
+            </po-table>
+
+            <po-chart class="po-md-6" [p-series]="[
+            { label: 'Caneta azul', data: 100 },
+            { label: 'Caneta vermelha', data: 10 }
+            ]">
+            </po-chart>
+        </po-container>
+    </div>
+    <!-- produtos mais vendidos -->
+
 
 </po-page-default>

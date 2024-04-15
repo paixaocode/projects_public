@@ -80,14 +80,20 @@ export class SolicitacoesDeVendaComponent {
       label: 'Comunicar falta de estoque',
       type: 'danger',
     },
+    {
+      action: this.enviaNfe.bind(this),
+      icon: 'po-icon po-icon-upload',
+      label: 'Enviar NF-e',
+      type: 'warning',
+    },
   ];
 
   loadSolicitacoes() {
     const userData = this.userService.getUserData();
     const token = userData.token;
-  
+
     const body = { token: token };
-  
+
     this.http.post<any>('http://localhost:8080/rest/supplierportal/api/service/supplier/v1/budget/query', body)
       .subscribe(
         response => {
@@ -109,10 +115,6 @@ export class SolicitacoesDeVendaComponent {
                 };
               });
             });
-            
-            //muda o icone na tabela, caso o produto esteja aprovado
-            this.actions = this.updateActionsTable();
-  
           } else {
             this.existeSolicitacao = false;
           }
@@ -123,52 +125,13 @@ export class SolicitacoesDeVendaComponent {
       );
   }
 
-  updateActionsTable(): Array<PoTableAction> {
-    const actions: Array<PoTableAction> = [];
-    const approvedStatus = ['aprovado'];
-  
-    const hasApprovedProducts = this.produtosOrcamento.some(produto => approvedStatus.includes(produto.Status));
-  
-    if (hasApprovedProducts) {
-      actions.push(
-        {
-          action: this.enviaNfe.bind(this),
-          icon: 'po-icon po-icon-upload',
-          label: 'Enviar NF-e',
-          type: 'warning',
-        },
-        // {
-        //   action: this.offBudget.bind(this),
-        //   icon: 'po-icon po-icon-mail', // Ícone adicional 1
-        //   label: 'Enviar e-mail',
-        //   type: 'primary',
-        // }
-      );
-    } else {
-      actions.push(
-        {
-          action: this.newBudget.bind(this),
-          icon: 'po-icon-edit',
-          label: 'Gerar orçamento',
-        },
-        {
-          action: this.offBudget.bind(this),
-          icon: 'po-icon-delete',
-          label: 'Comunicar falta de estoque',
-          type: 'danger',
-        }
-      );
-    }
-  
-    return actions;
-  }
 
   //modal orçamento
   newBudget(item: any) {
     if (item.Status === 'semEstoque') {
       this.poNotification.information(`Não é possível gerar orçamento para o produto [${item.descricaoProduto.toUpperCase()}], pois a empresa já foi comunicada sobre a falta de estoque.`);
     } else if (item.Status === 'aprovado') {
-      this.poNotification.information(`O produto [${item.descricaoProduto.toUpperCase()}] já teve o orçamento aprovado. Não é possível comunicar falta de estoque.`);
+      this.poNotification.information(`O produto [${item.descricaoProduto.toUpperCase()}] já teve o orçamento aprovado. Não é possível gerar orçamento.`);
     } else if (item.Status !== 'enviado') {
       this.loadTable = true;
       this.titleModalOrcamento = `ORÇAMENTO PARA: ${item.descricaoProduto.toUpperCase()} `;
@@ -181,7 +144,7 @@ export class SolicitacoesDeVendaComponent {
       this.poNotification.warning(`O produto: ${item.descricaoProduto} já teve o orçamento gerado! Não é possível gera-lo novamente.`);
     }
   }
-  
+
 
   offBudget(item: any) {
     if (item.Status === 'semEstoque') {
@@ -190,21 +153,26 @@ export class SolicitacoesDeVendaComponent {
       this.poNotification.information(`O produto [${item.descricaoProduto.toUpperCase()}] já teve o orçamento aprovado. Não é possível comunicar falta de estoque.`);
     } else {
       this.produtoOrcamento = item.descricaoProduto;
-  
+
       this.itemSelecionado = {
         descricaoProduto: item.descricaoProduto,
         numOrcamento: item.numOrcamento,
         numeroItem: item.numeroItem,
         token: this.userService.getUserData().token
       };
-  
+
       this.modalSemEstoque.open();
     }
   }
 
-  enviaNfe(){
-    return true
+  enviaNfe(item: any) {
+    {
+      if (item.Status != 'aprovado') {
+        this.poNotification.error(`Você só poderá usar essa opção quando o status do produto estiver [APROVADO]`);
+      }
+    }
   }
+
 
   //fecha modal orçamento
   closeModalOrcamento(event: any) {
@@ -234,49 +202,51 @@ export class SolicitacoesDeVendaComponent {
     this.modalSemEstoque.close();
   }
 
-  public readonly literalsContato: PoTableLiterals = {
+  public readonly noExistSolicitacao: PoTableLiterals = {
     noData: 'Não há contatos para apresentar',
   };
 
+  selecionarItem(item: any) {
+    this.itemSelecionado = item;
+  }
+  
+
   enviarOrcamento() {
-    if (!this.valorProposto.trim() || !this.prazoEntrega.trim()) {
-      this.poNotification.warning('Preencha todos os campos para seguir com o oçamento.');
+    if (!this.valorProposto.trim() || !this.prazoEntrega.trim() || !this.itemSelecionado) {
+      this.poNotification.warning('Preencha todos os campos e selecione um item para seguir com o orçamento.');
       return;
     }
-
-    this.loadingButtonOrcamento = true;
-    this.disabledButtonFecharOrcamento = true;
-
+  
     const userData = this.userService.getUserData();
     const token = userData.token;
-
-    const produto = this.produtosOrcamento.find(item => item.descricaoProduto === this.produtoOrcamento);
-
-    if (!produto) {
-      this.poNotification.error('Produto não encontrado.');
-      return;
-    }
-
+  
+    const { numOrcamento, codigoProduto, descricaoProduto, quantidadeProduto, numeroItem, numeroProduto, vencimentoSolicitacao } = this.itemSelecionado;
+  
     const body = {
       token: token,
-      numOrcamento: produto.numOrcamento,
-      codigoProduto: produto.codigoProduto,
-      produtoDescricao: this.produtoOrcamento,
-      quantidadeProduto: produto.quantidadeProduto,
+      numOrcamento: numOrcamento,
+      codigoProduto: codigoProduto,
+      produtoDescricao: descricaoProduto,
+      quantidadeProduto: quantidadeProduto,
       valor_proposto: this.valorProposto,
       prazo_entrega: this.prazoEntrega,
-      numeroItem: produto.numeroItem,
-      numeroProduto: produto.numeroProduto
+      numeroItem: numeroItem,
+      numeroProduto: numeroProduto,
+      vencimentoSolicitacao: vencimentoSolicitacao
     };
+  
+    console.log(body); 
 
     this.http.put('http://localhost:8080/rest/supplierportal/api/service/supplier/v1/budget/update', body)
       .subscribe(
         response => {
+
           this.poNotification.success('Orçamento enviado com sucesso!');
-
-          // Quando o orçamento for enviado, atualiza o status
-          produto.Status = 'enviado';
-
+  
+          if (this.itemSelecionado) {
+            this.itemSelecionado.Status = 'enviado';
+          }
+  
           this.closeModal();
         },
         error => {
@@ -284,36 +254,36 @@ export class SolicitacoesDeVendaComponent {
         }
       )
       .add(() => {
+
         this.loadingButtonOrcamento = false;
         this.disabledButtonFecharOrcamento = false;
       });
   }
-
   confirmarFaltaEstoque() {
 
     const { numOrcamento, numeroItem, token } = this.itemSelecionado;
-  
+
     this.loadingButtonSemEstoque = true;
     this.disabledButtonVoltarSemEstoque = true;
-  
+
     const body = {
       token: token,
       numOrcamento: numOrcamento,
       numeroItem: numeroItem
     };
-  
+
     this.http.post('http://localhost:8080/rest/supplierportal/api/service/supplier/v1/budget/update/budget-off', body)
       .subscribe(
         response => {
           this.poNotification.success('Falta de estoque comunicada com sucesso!');
-          
+
           //busca o produto usando o find
           const produto = this.produtosOrcamento.find(item => item.numOrcamento === numOrcamento && item.numeroItem === numeroItem);
 
           if (produto) {
             produto.Status = 'semEstoque';
           }
-          
+
           this.closeModalOffEstoque();
         },
         error => {
