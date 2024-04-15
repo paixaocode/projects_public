@@ -53,6 +53,13 @@ WSRESTFUL supplierPortal DESCRIPTION "Integrações Supplier Portal"
 		TTALK 'v1';
 		PRODUCES APPLICATION_JSON
 
+	WSMETHOD POST METRICS;
+		DESCRIPTION 'Atualiza os preços do orçamento';
+		WSSYNTAX '/api/service/supplier/v1/budget/query/metrics';
+		PATH '/api/service/supplier/v1/budget/query/metrics';
+		TTALK 'v1';
+		PRODUCES APPLICATION_JSON
+
 	WSMETHOD PUT NEW;
 		DESCRIPTION 'Atualiza os preços do orçamento';
 		WSSYNTAX '/api/service/supplier/v1/budget/update';
@@ -62,8 +69,147 @@ WSRESTFUL supplierPortal DESCRIPTION "Integrações Supplier Portal"
 
 END WSRESTFUL
 
+
 /*/{Protheus.doc} supplierPortal
-Retorna o status do orçamento atualizado (por item)
+Retorna o produto mais vendido, e o menos vendido.
+A api retorna um array com dois tipos:
+[1] = Mais vendido
+[2] = Menos vendido
+@author Gabriel Paixão
+@since 26/03/2024
+@version 1.0
+@type wsrestful
+/*/
+WSMETHOD POST METRICS WSSERVICE supplierPortal
+
+	Local lRet       := .T.
+	Local jJson      := Nil
+	Local cJson      := Self:GetContent()
+	Local jResponse  := JsonObject():New()
+	Local cFor 		 := ""
+	Local aRet   	 := {}
+	Local cQry   	 := ''
+	Local aPar	 	 := {}
+	Local cAlias 	 := ''
+
+	Self:SetContentType('application/json')
+	jJson  := JsonObject():New()
+	cError := jJson:FromJson(cJson)
+
+	If !Empty(cError)
+		Self:setStatus(500)
+		jResponse['errorId']  := '001'
+		jResponse['error']    := 'Ocorreu um erro ao realizar o parse'
+		jResponse['solution'] := EncodeUTF8('Verifique as informações do body')
+		Self:setStatus(500)
+		Self:SetResponse(jResponse:toJSON())
+		Return
+	EndIf
+
+	cFor := ReadValue('SA2',11, WebEncript(jJson:GetJsonObject('token'), .F.), 'A2_COD')
+
+	If Empty(cFor)
+		Self:setStatus(500)
+		jResponse['errorId']  := '002'
+		jResponse['error']    := EncodeUTF8('Não foi possível encontrar o fornecedor na base de dados.')
+		jResponse['solution'] := EncodeUTF8('Verifique as infomações, ou entre em contato com o administrador.')
+		Self:setStatus(500)
+		Self:SetResponse(jResponse:toJSON())
+		Return
+	EndIf
+
+	cQry += " SELECT"
+	cQry += " '1' AS TIPO,"
+	cQry += " SC8.C8_PRODUTO as PRODUTO,"
+	cQry += " SUM(SC8.C8_QUANT) AS QUANTVENDIDA,"
+	cQry += " SB1.B1_DESC AS DESCRICAO"
+	cQry += " FROM "+RetSqlName("SC8") + " AS SC8"
+	cQry += " JOIN"
+	cQry += " "+RetSqlName("SB1")+ " AS SB1 ON SC8.C8_PRODUTO = SB1.B1_COD"
+
+	cQry += " WHERE"
+	cQry += " SC8.C8_NUMPED <> ' '"
+	cQry += " AND SC8.D_E_L_E_T_ = ' '"
+	cQry += " AND SC8.C8_QUANT > ? "
+	cQry += " AND SC8.C8_FORNECE = ?"
+	cQry += " AND SC8.C8_PRODUTO IN("
+	cQry += " SELECT TOP 1 SC8_SUB.C8_PRODUTO"
+	cQry += " FROM "+RetSqlName("SC8") + " AS SC8_SUB"
+	cQry += " WHERE SC8_SUB.C8_NUMPED <> ' '"
+	cQry += " AND SC8_SUB.D_E_L_E_T_ = ' '"
+	cQry += " AND SC8_SUB.C8_QUANT > ?"
+	cQry += " AND SC8_SUB.C8_FORNECE = ?"
+	cQry += " GROUP BY SC8_SUB.C8_PRODUTO"
+	cQry += " ORDER BY SUM(SC8_SUB.C8_QUANT) DESC"
+	cQry += " )"
+
+	cQry += " GROUP BY"
+	cQry += " SC8.C8_PRODUTO,"
+	cQry += " SB1.B1_DESC"
+
+	cQry += " UNION ALL"
+
+	cQry += " SELECT"
+	cQry += " '2' AS TIPO,"
+	cQry += " SC8.C8_PRODUTO AS PRODUTO,"
+	cQry += " SUM(SC8.C8_QUANT) AS QUANTVENDIDA,"
+	cQry += " SB1.B1_DESC AS DESCRICAO"
+	cQry += " FROM "+RetSqlName("SC8") +  " AS SC8"
+	cQry += " JOIN"
+	cQry += " "+RetSqlName("SB1")+ " AS SB1 ON SC8.C8_PRODUTO = SB1.B1_COD"
+	cQry += " WHERE"
+	cQry += " SC8.C8_NUMPED <> ' '"
+	cQry += " AND SC8.D_E_L_E_T_ = ' '"
+	cQry += " AND SC8.C8_QUANT > ?"
+	cQry += " AND SC8.C8_FORNECE = ?"
+	cQry += " AND SC8.C8_PRODUTO IN ("
+	cQry += " SELECT TOP 1 SC8_SUB.C8_PRODUTO"
+	cQry += " FROM "+RetSqlName("SC8") + " AS SC8_SUB"
+	cQry += " WHERE SC8_SUB.C8_NUMPED <> ' '"
+	cQry += " AND SC8_SUB.D_E_L_E_T_ = ' '"
+	cQry += " AND SC8_SUB.C8_QUANT > ?"
+	cQry += " AND SC8_SUB.C8_FORNECE = ?"
+	cQry += " GROUP BY SC8_SUB.C8_PRODUTO"
+	cQry += " ORDER BY SUM(SC8_SUB.C8_QUANT) ASC"
+	cQry += " )"
+	cQry += " GROUP BY"
+	cQry += " SC8.C8_PRODUTO,"
+	cQry += " SB1.B1_DESC"
+	cQry += " ORDER BY TIPO"
+
+	aPar 	:= {'0', cFor, '0', cFor, '0', cFor, '0', cFor}
+
+	cAlias 	:= MPSysOpenQuery(cQry,,,,aPar)
+
+	(cAlias)->(DbGoTop())
+	While (cAlias)->(!EoF())
+		aAdd(aRet, {(cAlias)->TIPO, AllTrim((cAlias)->DESCRICAO), (cAlias)->QUANTVENDIDA})
+		(cAlias)->(DbSkip())
+	EndDo
+
+	If Len(aRet) > 0
+		aRet := PrdVenQry(aRet)
+		If Len(aRet) > 0
+			jResponse['message'] := aRet
+		Else
+			Self:setStatus(500)
+			jResponse['errorId']  := '003'
+			jResponse['error']    := 'Houve um erro ao consultar os dados do fornecedor: ' + cFor
+			jResponse['solution'] := EncodeUTF8('Para mais informações entre em contato com um administrador.')
+			Self:setStatus(500)
+			Self:SetResponse(jResponse:toJSON())
+			Return
+		EndIf
+	Else
+		jResponse['message'] := EncodeUTF8('Não existe produtos mais, ou menos vendido para esse fornecedor')
+	EndIf
+
+	Self:SetResponse(jResponse:toJSON())
+
+Return lRet
+
+/*/{Protheus.doc} supplierPortal
+Realiza a comunicação da falta de estoque
 @author Gabriel Paixão
 @since 26/03/2024
 @version 1.0
@@ -75,7 +221,6 @@ WSMETHOD POST BUDGETOFF WSSERVICE supplierPortal
 	Local jJson      := Nil
 	Local cJson      := Self:GetContent()
 	Local jResponse  := JsonObject():New()
-	Local oException := ErrorBlock({|e| cErroBlk := + e:Description + e:ErrorStack, lRet := .F. })
 	Local cFor 		 := ""
 	Local cLoja		 := ""
 
@@ -364,7 +509,6 @@ WSMETHOD POST SET WSRECEIVE WSSERVICE supplierPortal
 	Local jJson      := Nil
 	Local cJson      := Self:GetContent()
 	Local jResponse  := JsonObject():New()
-	Local oException := ErrorBlock({|e| cErroBlk := + e:Description + e:ErrorStack, lRet := .F. })
 	Local cAlias 	 := "SA2"
 	Local cPass		 := ""
 
@@ -703,6 +847,36 @@ User Function StorageBud(aData, cCodEven, lAction)
 	EndIf
 
 Return lRet
+
+/*/{Protheus.doc} GetJsonBudget
+Cria o objeto JSON para retornar o produto mais vendido e o menos vendido
+@Type Function
+@Author Gabriel Paixão
+@Params aData, array, Dados da query para criar o JSON
+@Since 08/04/2024
+/*/
+Static Function PrdVenQry(aData)
+
+	Local aDataJson    := {}
+	Local nLenJson     := 0
+	Local nX       	   := 0
+	Local oJson        := JsonObject():New()
+
+	Default aData   := {}
+
+	If ValType(aData) == 'A' .And. Len(aData) > 0
+		For nX := 1 To Len(aData)
+			nLenJson++
+			aAdd(aDataJson, JsonObject():new())
+			aDataJson[nLenJson]["type"] 		:= aData[nX,1]
+			aDataJson[nLenJson]["description"] 	:= Upper(aData[nX,2])
+			aDataJson[nLenJson]["soldAmount"] 	:= aData[nX,3]
+		Next
+	EndIf
+
+	oJson := aDataJson
+
+Return oJson
 
 /*/{Protheus.doc} GetJsonBudget
 Cria o objeto JSON para retornar o orçamento
