@@ -19,7 +19,7 @@ export class HomeComponent {
   quantidadeMaisVendido: number = 0;
   quantidadeMenosVendido: number = 0;
   clickedProductWinner: boolean = true;
-  hasMoreData: boolean = true;
+  clickedLosertWinner: boolean = false;
   messageMain: string = 'Suas informações em um só lugar'
 
   produtosMaisVendidos: any[] = [
@@ -28,7 +28,6 @@ export class HomeComponent {
     { posicaoProdutoMaisVendido: 3, descricaoProdutoMaisVendido: 'Produto 3', quantidadeProdutoMaisVendido: 80 },
     { posicaoProdutoMaisVendido: 4, descricaoProdutoMaisVendido: 'Produto 4', quantidadeProdutoMaisVendido: 70 },
     { posicaoProdutoMaisVendido: 5, descricaoProdutoMaisVendido: 'Produto 5', quantidadeProdutoMaisVendido: 60 },
-    { posicaoProdutoMaisVendido: 6, descricaoProdutoMaisVendido: 'Produto 6', quantidadeProdutoMaisVendido: 50 },
 
   ];
   constructor(private authService: AuthService,
@@ -120,18 +119,14 @@ export class HomeComponent {
     return response
   }
 
+  clickWidgetProductLoser($event: any) {
+    let response = this.clickedLosertWinner = true;
+    this.messageMain = 'Produtos menos vendidos'
+    return response
+  }
+
   onClickButtonVoltar() {
     this.clickedProductWinner = false;
     this.messageMain = 'Suas informações em um só lugar'
-  }
-
-
-  // Método para carregar mais dados
-  loadMoreData(event: any) {
-    // Aqui você faria a lógica para carregar mais dados, por exemplo, buscar do seu serviço ou de outra fonte de dados
-    // Após carregar os dados, você atualizaria a variável hasMoreData conforme necessário
-    // Por exemplo, se todos os dados foram carregados, você pode definir hasMoreData como false
-    // Caso contrário, você pode mantê-lo como true para permitir mais carregamentos
-
   }
 }

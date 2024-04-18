@@ -21,7 +21,7 @@ const routes: Routes = [
     path: '',
     component: MenuComponent,
     children: [
-      { path: 'home', component: HomeComponent, },//canActivate: [AuthGuard] },
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
       { path: 'solicitacoes-de-venda', component: SolicitacoesDeVendaComponent },
     ]
   },
